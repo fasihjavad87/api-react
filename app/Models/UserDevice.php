@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Sanctum\PersonalAccessToken;
+
+class UserDevice extends Model
+{
+    use HasFactory;
+
+    protected $table = 'user_devices';
+
+    protected $fillable = [
+        'user_id',
+        'device_id',
+        'device_name',
+        'platform',
+        'browser',
+        'device_type',
+    ];
+
+    /**
+     * رابطه‌ی دستگاه با کاربر مالک
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * رابطه‌ی دستگاه با توکن‌های Sanctum صادر شده برای آن
+     */
+    public function tokens(): HasMany
+    {
+        return $this->hasMany(PersonalAccessToken::class, 'device_id', 'device_id');
+    }
+}
